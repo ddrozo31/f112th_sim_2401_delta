@@ -62,6 +62,8 @@
     <gazebo
         reference="rear_left_wheel">
         <material>Gazebo/blue</material>
+        <mu1 value = "0.001" />
+        <mu2 value = "0.001" />
     </gazebo>
 
 
@@ -87,6 +89,8 @@
     <gazebo
         reference="rear_right_wheel">
         <material>Gazebo/blue</material>
+        <mu1 value = "0.001" />
+        <mu2 value = "0.001" />
     </gazebo>
 
     <link name="front_right_wheel">
@@ -107,9 +111,10 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
         </xacro:inertial_cylinder>
     </link>
-    <gazebo
-        reference="front_right_wheel">
+    <gazebo reference="front_right_wheel">
         <material>Gazebo/blue</material>
+        <mu1 value = "0.001" />
+        <mu2 value = "0.001" />
     </gazebo>
 
     <link name="front_left_wheel">
@@ -133,72 +138,59 @@
     <gazebo
         reference="front_left_wheel">
         <material>Gazebo/blue</material>
+        <mu1 value = "0.001" />
+        <mu2 value = "0.001" />
     </gazebo>
-
-    <!-- Steering wheel link -->
-    <link name="steering_wheel">
-        <visual>
-            <origin xyz="0 0 0.02" />
-            <geometry>
-                <cylinder radius="0.03" length="0.04" />
-            </geometry>
-            <material name="red" />
-        </visual>
-        <collision>
-            <origin xyz="0 0 0.02" />
-            <geometry>
-                <cylinder radius="0.03" length="0.04" />
-            </geometry>
-        </collision>
-        <xacro:inertial_cylinder mass="0.05" length="0.04" radius="0.03">
-            <origin xyz="0 0 0.02" rpy="0 0 0" />
-        </xacro:inertial_cylinder>
-    </link>
 
 
     <!-- right wheel joint -->
-    <joint name="rear_right_wheel_joint"
-        type="continuous">
+    <joint name="rear_right_wheel_joint" type="continuous">
         <parent link="base_link" />
         <child link="rear_right_wheel" />
-        <origin xyz="0 -0.175 0" rpy="${pi/2} 0 0" />
+        <origin xyz="0 ${-0.175} 0" rpy="${3.14/2} 0 0" />
         <axis xyz="0 0 -1" />
     </joint>
 
     <!-- left wheel joint -->
-    <joint name="rear_left_wheel_joint"
-        type="continuous">
+    <joint name="rear_left_wheel_joint" type="continuous">
         <parent link="base_link" />
         <child link="rear_left_wheel" />
-        <origin xyz="0 0.175 0" rpy="-${pi/2} 0 0" />
+        <origin xyz="0 ${0.175} 0" rpy="${-3.14/2} 0 0" />
         <axis xyz="0 0 1" />
     </joint>
     <!-- Conectar el steering_wheel al chasis -->
-    <joint name="steering_joint" type="revolute">
-        <parent link="base_link" />
-        <child link="steering_wheel" />
-        <origin xyz="0.20 0 0.02" />
-        <axis xyz="0 0 1" />
-        <limit effort="100" lower="-0.5" upper="0.5" velocity="1" />
-    </joint>
 
-    <link name="right_steering_link"></link>
-    <link name="left_steering_link"></link>
+
+    <link name="right_steering_link">
+        <inertial>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <mass value="1" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+
+    <link name="left_steering_link">
+        <inertial>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <mass value="1" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
 
 
     <!-- Conectar right_steering_link al steering_wheel -->
-    <joint name="front_right_steer_joint" type="continuous">
-        <parent link="steering_wheel" />
+    <joint name="front_right_steer_joint" type="revolute">
+        <parent link="base_link" />
         <child link="right_steering_link" />
-        <origin xyz="0 -0.175 0" />
+        <origin xyz="0.20 -0.175 0" />
         <axis xyz="0 0 1" />
         <limit effort="100" lower="-0.5" upper="0.5" velocity="1" />
     </joint>
     <!-- Conectar left_steering_link al steering_wheel -->
-    <joint name="front_left_steer_joint" type="continuous">
-        <parent link="steering_wheel" />
+    <joint name="front_left_steer_joint" type="revolute">
+        <parent link="base_link" />
         <child link="left_steering_link" />
-        <origin xyz="0  0.175 0" />
+        <origin xyz="0.20  0.175 0" />
         <axis xyz="0 0 1" />
         <limit effort="100" lower="-0.5" upper="0.5" velocity="1" />
     </joint>
@@ -207,14 +199,14 @@
     <joint name="front_right_wheel_joint" type="continuous">
         <parent link="right_steering_link" />
         <child link="front_right_wheel" />
-        <origin xyz="0 0 -0.01" rpy="-${pi/2} 0 0" />
+        <origin xyz="0 0 0" rpy="-${pi/2} 0 0" />
         <axis xyz="0 0 -1" />
     </joint>  <!-- Conectar el left_steering_link a la llanta delantera
     izquierda -->
     <joint name="front_left_wheel_joint" type="continuous">
         <parent link="left_steering_link" />
         <child link="front_left_wheel" />
-        <origin xyz="0 0 -0.01" rpy="-${pi/2} 0 0" />
+        <origin xyz="0 0 0" rpy="-${pi/2} 0 0" />
         <axis xyz="0 0 1" />
     </joint>
 
