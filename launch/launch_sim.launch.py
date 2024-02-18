@@ -5,8 +5,10 @@ from ament_index_python.packages import get_package_share_directory
 
 # libraries to define the Launch file and Function
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, RegisterEventHandler
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+
+from launch.event_handlers import OnProcessExit
 
 from launch_ros.actions import Node
 
@@ -40,13 +42,25 @@ def generate_launch_description():
     tricycle_drive_spawner = Node(
         package='controller_manager', 
         executable='spawner', 
-        arguments=['ackermann_steering_controller'])
+        arguments=['bicycle_steering_controller',"--controller-manager", "/controller_manager"],
+        remappings=[
+                ("/bicycle_steering_controller/tf_odometry", "/tf"),]
+        )
 		
 		# Launch the Joint_Broadcaster
     joint_broad_spawner = Node(
         package='controller_manager', 
         executable='spawner', 
-        arguments=['joint_state_broadcaster'])
+        arguments=['joint_state_broadcaster',"--controller-manager", "/controller_manager"])
+    
+
+    # Delay start of robot_controller after `joint_state_broadcaster`
+    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_broad_spawner,
+            on_exit=[tricycle_drive_spawner],
+        )
+    )
 
 
     # Launch them all!
