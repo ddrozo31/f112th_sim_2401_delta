@@ -50,21 +50,21 @@ install(
 )
 install(
   DIRECTORY description/
-  DESTINATION share/description/${PROJECT_NAME}
+  DESTINATION share/${PROJECT_NAME}
 )
 install(
   DIRECTORY launch/ 
-  DESTINATION share/launch/${PROJECT_NAME}
+  DESTINATION share/${PROJECT_NAME}
 )
 
 install(
   DIRECTORY config/ 
-  DESTINATION share/config/${PROJECT_NAME}
+  DESTINATION share/${PROJECT_NAME}
 )
 
 install(
   DIRECTORY worlds/ 
-  DESTINATION share/worlds/${PROJECT_NAME}
+  DESTINATION share/${PROJECT_NAME}
 )
 
 
